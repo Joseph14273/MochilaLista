@@ -12,10 +12,13 @@ export function useBackpack(initialDay: Day = "Lunes") {
     }));
   };
 
+  const resetWeek = () => setCheckedItems({});
+
   return {
     selectedDay,
     checkedItems,
     selectDay: setSelectedDay,
     toggleItem,
+    resetWeek,
   };
 }

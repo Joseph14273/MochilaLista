@@ -1,12 +1,18 @@
 import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
+import * as Haptics from "expo-haptics";
 import { DAYS, Day } from "../types";
 
 type DaySelectorProps = {
   selectedDay: Day;
   onSelectDay: (day: Day) => void;
+  dark?: boolean;
 };
 
-export function DaySelector({ selectedDay, onSelectDay }: DaySelectorProps) {
+export function DaySelector({ selectedDay, onSelectDay, dark = false }: DaySelectorProps) {
+  const surface = dark ? "#18312E" : "#FFFDF8";
+  const border = dark ? "#2C4641" : "#E5DDCF";
+  const text = dark ? "#ADC1BB" : "#71827E";
+
   return (
     <ScrollView
       horizontal
@@ -21,10 +27,17 @@ export function DaySelector({ selectedDay, onSelectDay }: DaySelectorProps) {
             key={day}
             accessibilityRole="button"
             accessibilityState={{ selected: isSelected }}
-            onPress={() => onSelectDay(day)}
-            style={[styles.button, isSelected && styles.selectedButton]}
+            onPress={() => {
+              void Haptics.selectionAsync();
+              onSelectDay(day);
+            }}
+            style={[
+              styles.button,
+              { backgroundColor: surface, borderColor: border },
+              isSelected && styles.selectedButton,
+            ]}
           >
-            <Text style={[styles.text, isSelected && styles.selectedText]}>{day}</Text>
+            <Text style={[styles.text, { color: text }, isSelected && styles.selectedText]}>{day}</Text>
           </Pressable>
         );
       })}
@@ -40,15 +53,15 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    borderColor: "#E2E7F0",
+    borderColor: "#E5DDCF",
     borderRadius: 14,
     borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   selectedButton: {
-    backgroundColor: "#5271FF",
-    borderColor: "#5271FF",
+    backgroundColor: "#F26B4A",
+    borderColor: "#F26B4A",
   },
   text: {
     color: "#69738D",
